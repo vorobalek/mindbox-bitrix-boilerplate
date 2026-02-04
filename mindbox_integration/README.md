@@ -28,6 +28,21 @@ Installation
    - MindboxIntegration::sendAsync($operation, $payload, $deviceUUID, $authorization);
    - MindboxIntegration::sendSync($operation, $payload, $deviceUUID, $authorization);
 
+6) Website.AuthorizeCustomer (separate file, safe autoload):
+   - File location:
+     /local/php_interface/mindbox_integration/lib/CustomerOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - If configuration is incomplete, handlers are not registered and nothing is sent.
+   - On successful site authorization (`main:OnAfterUserAuthorize`) the integration sends
+     operation from config via `MindboxIntegration::sendAsync(..., true)`.
+   - User ID is taken strictly from `user_fields.ID` of the event params.
+   - Configure operation behavior in config.php:
+     - operations.authorizeCustomer.enabled
+     - operations.authorizeCustomer.operation
+     - operations.authorizeCustomer.mindbox_ids_key
+     - operations.authorizeCustomer.site_customer_id_field
+   - deviceUUID cookie name is fixed: `mindboxDeviceUUID`
+
 Re-install after a failed install
 - It is safe to run /local/php_interface/mindbox_integration/admin_install.php again.
 - If some artifacts already exist, the installer will reuse them.

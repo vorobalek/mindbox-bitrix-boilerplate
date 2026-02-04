@@ -84,6 +84,15 @@ if (!class_exists('MindboxClient', false)) {
 require_once __DIR__ . '/lib/QueueStorage.php';
 require_once __DIR__ . '/lib/QueueService.php';
 
+$optionalFiles = [
+    __DIR__ . '/lib/CustomerOperations.php',
+];
+foreach ($optionalFiles as $optionalFile) {
+    if (is_file($optionalFile)) {
+        require_once $optionalFile;
+    }
+}
+
 if (!class_exists('MindboxIntegrationConfig', false)) {
     class MindboxIntegrationConfig
     {
@@ -100,6 +109,14 @@ if (!class_exists('MindboxIntegrationConfig', false)) {
                 'endpointId' => '',
                 'secretKeys' => [],
                 'timeout' => 5,
+                'operations' => [
+                    'authorizeCustomer' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'mindbox_ids_key' => '',
+                        'site_customer_id_field' => '',
+                    ],
+                ],
                 'queue' => [
                     'hl_block_name' => 'MindboxQueue',
                     'retry_interval_seconds' => 900,

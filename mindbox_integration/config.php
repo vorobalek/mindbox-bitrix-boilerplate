@@ -7,6 +7,14 @@ return [
         '...' => '', // example: 'mytestsite.WebsiteLoyalty' => '...',
     ],
     'timeout' => 5,
+    'operations' => [
+        'authorizeCustomer' => [
+            'enabled' => false, // set true only after all fields below are configured
+            'operation' => '', // example: 'Website.AuthorizeCustomer'
+            'mindbox_ids_key' => '', // example: 'IDWebsite'
+            'site_customer_id_field' => '', // example: 'ID' or custom user field code
+        ],
+    ],
     'queue' => [
         'hl_block_name' => 'MindboxQueue',
         'retry_interval_seconds' => 900,

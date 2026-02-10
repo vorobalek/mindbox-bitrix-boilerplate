@@ -5,11 +5,13 @@ if (is_file($mindbox_path)) {
     require_once $mindbox_path;
 }
 
-if (class_exists('MindboxCustomerOperations', false) && method_exists('MindboxCustomerOperations', 'registerHandlers')) {
-    try {
-        MindboxCustomerOperations::registerHandlers();
-    } catch (\Throwable $e) {
-        // ignore handler registration failures to keep integration boot-safe
+foreach (['MindboxCustomerOperations', 'MindboxOutOfStockOperations'] as $operationClass) {
+    if (class_exists($operationClass, false) && method_exists($operationClass, 'registerHandlers')) {
+        try {
+            $operationClass::registerHandlers();
+        } catch (\Throwable $e) {
+            // ignore handler registration failures to keep integration boot-safe
+        }
     }
 }
 

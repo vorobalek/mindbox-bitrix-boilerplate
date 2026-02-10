@@ -43,6 +43,27 @@ Installation
      - operations.authorizeCustomer.site_customer_id_field
    - deviceUUID cookie name is fixed: `mindboxDeviceUUID`
 
+7) Website.OutOfStock for "subscribe to product":
+   - File location:
+     /local/php_interface/mindbox_integration/lib/OutOfStockOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - If configuration is incomplete, handlers are not registered and nothing is sent.
+   - Handler listens `iblock:OnAfterIBlockElementAdd` and sends operation from config.
+   - Default mapping is compatible with payload from:
+     - subscription element `NAME` -> customer email
+     - subscription element `CODE` -> product id in website ids
+   - Configure operation behavior in config.php:
+     - operations.outOfStock.enabled
+     - operations.outOfStock.operation
+     - operations.outOfStock.subscription_iblock_id
+     - operations.outOfStock.product_ids_key
+     - operations.outOfStock.brand
+     - operations.outOfStock.point_of_contact
+     - operations.outOfStock.topic
+     - operations.outOfStock.email_field
+     - operations.outOfStock.product_id_field
+     - operations.outOfStock.authorization
+
 Re-install after a failed install
 - It is safe to run /local/php_interface/mindbox_integration/admin_install.php again.
 - If some artifacts already exist, the installer will reuse them.

@@ -86,6 +86,7 @@ require_once __DIR__ . '/lib/QueueService.php';
 
 $optionalFiles = [
     __DIR__ . '/lib/CustomerOperations.php',
+    __DIR__ . '/lib/OutOfStockOperations.php',
 ];
 foreach ($optionalFiles as $optionalFile) {
     if (is_file($optionalFile)) {
@@ -115,6 +116,18 @@ if (!class_exists('MindboxIntegrationConfig', false)) {
                         'operation' => '',
                         'mindbox_ids_key' => '',
                         'site_customer_id_field' => '',
+                    ],
+                    'outOfStock' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'subscription_iblock_id' => 0,
+                        'product_ids_key' => '',
+                        'brand' => '',
+                        'point_of_contact' => 'Email',
+                        'topic' => '',
+                        'email_field' => 'NAME',
+                        'product_id_field' => 'CODE',
+                        'authorization' => true,
                     ],
                 ],
                 'queue' => [

@@ -182,7 +182,8 @@ if (!class_exists('MindboxIntegration', false)) {
             ?string $deviceUUID = null,
             bool $authorization = false,
             ?string $transactionId = null,
-            ?array $configOverride = null
+            ?array $configOverride = null,
+            bool $throwValidation = false
         ) {
             try {
                 $config = MindboxIntegrationConfig::withOverride($configOverride);
@@ -195,6 +196,11 @@ if (!class_exists('MindboxIntegration', false)) {
                     $authorization,
                     $transactionId
                 );
+            } catch (MindboxValidationException $e) {
+                if ($throwValidation) {
+                    throw $e;
+                }
+                return null;
             } catch (\Throwable $e) {
                 return null;
             }
@@ -206,9 +212,10 @@ if (!class_exists('MindboxIntegration', false)) {
             ?string $deviceUUID = null,
             bool $authorization = false,
             ?string $transactionId = null,
-            ?array $configOverride = null
+            ?array $configOverride = null,
+            bool $throwValidation = false
         ) {
-            return self::send('async', $operation, $data, $deviceUUID, $authorization, $transactionId, $configOverride);
+            return self::send('async', $operation, $data, $deviceUUID, $authorization, $transactionId, $configOverride, $throwValidation);
         }
 
         public static function sendSync(
@@ -217,9 +224,10 @@ if (!class_exists('MindboxIntegration', false)) {
             ?string $deviceUUID = null,
             bool $authorization = false,
             ?string $transactionId = null,
-            ?array $configOverride = null
+            ?array $configOverride = null,
+            bool $throwValidation = false
         ) {
-            return self::send('sync', $operation, $data, $deviceUUID, $authorization, $transactionId, $configOverride);
+            return self::send('sync', $operation, $data, $deviceUUID, $authorization, $transactionId, $configOverride, $throwValidation);
         }
     }
 }

@@ -75,6 +75,10 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                     return;
                 }
 
+                if (!self::hasProfileFields($arFields, $settings)) {
+                    return;
+                }
+
                 $currentUser = self::loadUser($userId);
                 if ($currentUser === null) {
                     return;
@@ -87,13 +91,12 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                     return;
                 }
 
-                $config = MindboxIntegrationConfig::get();
-
-                MindboxIntegrationQueueService::sendOrQueue(
-                    'sync',
+                MindboxIntegration::sendSync(
                     $settings['operation'],
                     $payload,
-                    $config,
+                    null,
+                    true,
+                    null,
                     null,
                     true
                 );
@@ -149,13 +152,12 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
             }
 
             try {
-                $config = MindboxIntegrationConfig::get();
-
-                MindboxIntegrationQueueService::sendOrQueue(
-                    'sync',
+                MindboxIntegration::sendSync(
                     $settings['operation'],
                     $payload,
-                    $config,
+                    null,
+                    true,
+                    null,
                     null,
                     true
                 );
@@ -432,6 +434,24 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
             }
 
             return $user;
+        }
+
+        /**
+         * Check if $arFields contains at least one profile field we track.
+         * Prevents firing on system updates (LAST_LOGIN, STORED_HASH, etc.)
+         */
+        private static function hasProfileFields(array $arFields, array $settings)
+        {
+            $trackedFields = array_keys(self::$fieldMap);
+            $trackedFields[] = $settings['city_field'];
+
+            foreach ($trackedFields as $field) {
+                if (array_key_exists($field, $arFields)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static function resolveSiteCustomerId(array $user, $fieldName)

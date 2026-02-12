@@ -63,6 +63,8 @@ class MindboxIntegrationQueueService
                 self::storeFailed($config, $mode, $operation, $data, $deviceUUID, $authorization, $transactionId, null, $e);
                 return null;
             }
+        } catch (MindboxValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             self::logManual($safeConfig, $e->getMessage(), $operation ?: 'unknown', $data, $transactionId);
             return null;
@@ -273,7 +275,7 @@ class MindboxIntegrationQueueService
             'UF_HTTP_STATUS' => $e ? $e->getHttpStatus() : 0,
             'UF_RESPONSE_STATUS' => $e ? $e->getResponseStatus() : null,
             'UF_ERROR_ID' => $e ? $e->getErrorId() : null,
-            'UF_ERROR_MESSAGE' => $e ? $e->getErrorMessage() : ($t ? $t->getMessage() : null),
+            'UF_ERROR_MESSAGE' => self::resolveErrorMessage($e, $t),
             'UF_CREATED_AT' => $now,
             'UF_UPDATED_AT' => $now,
             'UF_LAST_ERROR_AT' => $now,
@@ -338,7 +340,7 @@ class MindboxIntegrationQueueService
             'UF_HTTP_STATUS' => $e ? $e->getHttpStatus() : 0,
             'UF_RESPONSE_STATUS' => $e ? $e->getResponseStatus() : null,
             'UF_ERROR_ID' => $e ? $e->getErrorId() : null,
-            'UF_ERROR_MESSAGE' => $e ? $e->getErrorMessage() : ($t ? $t->getMessage() : null),
+            'UF_ERROR_MESSAGE' => self::resolveErrorMessage($e, $t),
             'UF_UPDATED_AT' => new DateTime(),
             'UF_LAST_ERROR_AT' => new DateTime(),
             'UF_LOCKED_UNTIL' => null,
@@ -395,6 +397,21 @@ class MindboxIntegrationQueueService
         }
 
         return '';
+    }
+
+    private static function resolveErrorMessage(?MindboxClientException $e, ?\Throwable $t = null): ?string
+    {
+        if ($e !== null) {
+            $body = $e->getResponseBody();
+            if ($body !== null && $body !== '') {
+                return $body;
+            }
+            return $e->getMessage();
+        }
+        if ($t !== null) {
+            return $t->getMessage();
+        }
+        return null;
     }
 
     private static function formatException(MindboxClientException $e): string

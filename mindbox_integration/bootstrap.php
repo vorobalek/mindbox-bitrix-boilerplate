@@ -87,6 +87,7 @@ require_once __DIR__ . '/lib/QueueService.php';
 $optionalFiles = [
     __DIR__ . '/lib/CustomerOperations.php',
     __DIR__ . '/lib/OutOfStockOperations.php',
+    __DIR__ . '/lib/EditCustomerOperations.php',
 ];
 foreach ($optionalFiles as $optionalFile) {
     if (is_file($optionalFile)) {
@@ -128,6 +129,13 @@ if (!class_exists('MindboxIntegrationConfig', false)) {
                         'email_field' => 'NAME',
                         'product_id_field' => 'CODE',
                         'authorization' => true,
+                    ],
+                    'editCustomer' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'mindbox_ids_key' => '',
+                        'site_customer_id_field' => 'ID',
+                        'city_field' => 'PERSONAL_CITY',
                     ],
                 ],
                 'queue' => [

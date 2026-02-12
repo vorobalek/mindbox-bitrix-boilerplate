@@ -64,6 +64,45 @@ Installation
      - operations.outOfStock.product_id_field
      - operations.outOfStock.authorization
 
+8) Website.EditCustomer for profile editing:
+   - File location:
+     /local/php_interface/mindbox_integration/lib/EditCustomerOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - If configuration is incomplete, handlers are not registered and nothing is sent.
+   - Handler listens `main:OnBeforeUserUpdate` and sends customer data to Mindbox
+     BEFORE saving to Bitrix DB.
+   - On successful Mindbox response: Bitrix save proceeds normally.
+   - On validation error from Mindbox: save is cancelled, errors are shown to user
+     via $APPLICATION->ThrowException(). Structured per-field errors are stored in
+     $_SESSION['MINDBOX_EDIT_CUSTOMER_ERRORS'] for template-level display.
+   - On Mindbox unavailability (5XX/transport): request is queued for retry every
+     15 minutes, Bitrix save proceeds (graceful degradation).
+   - On 4XX errors: request is logged for manual review, Bitrix save proceeds.
+   - Configure operation behavior in config.php:
+     - operations.editCustomer.enabled
+     - operations.editCustomer.operation
+     - operations.editCustomer.mindbox_ids_key
+     - operations.editCustomer.site_customer_id_field
+     - operations.editCustomer.city_field (default: PERSONAL_CITY)
+   - Payload sent to Mindbox:
+     {
+       "customer": {
+         "lastName": "<LAST_NAME>",
+         "firstName": "<NAME>",
+         "middleName": "<SECOND_NAME>",
+         "email": "<EMAIL>",
+         "mobilePhone": "<PERSONAL_PHONE>",
+         "ids": { "<mindbox_ids_key>": "<site_customer_id>" },
+         "customFields": { "city": "<city_field value>" }
+       }
+     }
+   - Public API for programmatic use:
+     $result = MindboxEditCustomerOperations::sendEditCustomer($userId);
+     // returns ['success' => bool, 'errors' => ['FIELD' => 'message', ...]]
+   - Template helper for field-level error display:
+     $errors = MindboxEditCustomerOperations::getLastValidationErrors();
+     if ($errors && isset($errors['EMAIL'])) { echo $errors['EMAIL']; }
+
 Re-install after a failed install
 - It is safe to run /local/php_interface/mindbox_integration/admin_install.php again.
 - If some artifacts already exist, the installer will reuse them.

@@ -45,6 +45,10 @@ class MindboxIntegrationQueueService
             } catch (MindboxTransportException $e) {
                 self::enqueueRetry($config, $mode, $operation, $data, $deviceUUID, $authorization, $transactionId, $e);
                 return null;
+            } catch (MindboxValidationException $e) {
+                self::logManual($config, self::formatException($e), $operation, $data, $transactionId);
+                self::storeFailed($config, $mode, $operation, $data, $deviceUUID, $authorization, $transactionId, $e);
+                throw $e;
             } catch (MindboxClientException $e) {
                 if (self::isRetryableHttp($e)) {
                     self::enqueueRetry($config, $mode, $operation, $data, $deviceUUID, $authorization, $transactionId, $e);
@@ -126,6 +130,9 @@ class MindboxIntegrationQueueService
                 self::scheduleRetry($queue['hl_block_name'], (int)$row['ID'], $queue, $config, $e, (int)$row['UF_TRIES']);
             } catch (MindboxTransportException $e) {
                 self::scheduleRetry($queue['hl_block_name'], (int)$row['ID'], $queue, $config, $e, (int)$row['UF_TRIES']);
+            } catch (MindboxValidationException $e) {
+                self::markFailed($queue['hl_block_name'], (int)$row['ID'], $queue, $config, (int)$row['UF_TRIES'], $e);
+                self::logManual($requestConfig, self::formatException($e), (string)$row['UF_OPERATION'], (string)$row['UF_DATA'], $transactionId);
             } catch (MindboxClientException $e) {
                 if (self::isRetryableHttp($e)) {
                     self::scheduleRetry($queue['hl_block_name'], (int)$row['ID'], $queue, $config, $e, (int)$row['UF_TRIES']);

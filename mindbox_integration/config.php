@@ -26,6 +26,13 @@ return [
             'product_id_field' => 'CODE', // where product id is stored in subscription element
             'authorization' => true,
         ],
+        'editCustomer' => [
+            'enabled' => false, // set true only after all fields below are configured
+            'operation' => '', // example: 'Website.EditCustomer'
+            'mindbox_ids_key' => '', // example: 'IDWebsite'
+            'site_customer_id_field' => 'ID', // Bitrix user field for customer ID
+            'city_field' => 'PERSONAL_CITY', // Bitrix user field for city, or UF_* field
+        ],
     ],
     'queue' => [
         'hl_block_name' => 'MindboxQueue',

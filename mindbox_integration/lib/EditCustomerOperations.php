@@ -90,7 +90,7 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                 $config = MindboxIntegrationConfig::get();
 
                 MindboxIntegrationQueueService::sendOrQueue(
-                    'async',
+                    'sync',
                     $settings['operation'],
                     $payload,
                     $config,
@@ -152,7 +152,7 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                 $config = MindboxIntegrationConfig::get();
 
                 MindboxIntegrationQueueService::sendOrQueue(
-                    'async',
+                    'sync',
                     $settings['operation'],
                     $payload,
                     $config,

@@ -88,6 +88,7 @@ $optionalFiles = [
     __DIR__ . '/lib/CustomerOperations.php',
     __DIR__ . '/lib/OutOfStockOperations.php',
     __DIR__ . '/lib/EditCustomerOperations.php',
+    __DIR__ . '/lib/RegisterCustomerOperations.php',
 ];
 foreach ($optionalFiles as $optionalFile) {
     if (is_file($optionalFile)) {
@@ -136,6 +137,15 @@ if (!class_exists('MindboxIntegrationConfig', false)) {
                         'mindbox_ids_key' => '',
                         'site_customer_id_field' => 'ID',
                         'city_field' => 'PERSONAL_CITY',
+                    ],
+                    'registerCustomer' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'mindbox_ids_key' => '',
+                        'site_customer_id_field' => 'ID',
+                        'discount_card_ids_key' => '',
+                        'brand' => '',
+                        'topic' => '',
                     ],
                 ],
                 'queue' => [

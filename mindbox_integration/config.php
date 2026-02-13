@@ -33,6 +33,15 @@ return [
             'site_customer_id_field' => 'ID', // Bitrix user field for customer ID
             'city_field' => 'PERSONAL_CITY', // Bitrix user field for city, or UF_* field
         ],
+        'registerCustomer' => [
+            'enabled' => false, // set true only after all fields below are configured
+            'operation' => '', // example: 'Website.RegisterCustomer'
+            'mindbox_ids_key' => '', // example: 'IDWebsite'
+            'site_customer_id_field' => 'ID',
+            'discount_card_ids_key' => '', // key for discountCard.ids, e.g. 'number'
+            'brand' => '',
+            'topic' => '',
+        ],
     ],
     'queue' => [
         'hl_block_name' => 'MindboxQueue',

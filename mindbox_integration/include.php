@@ -5,7 +5,7 @@ if (is_file($mindbox_path)) {
     require_once $mindbox_path;
 }
 
-foreach (['MindboxCustomerOperations', 'MindboxOutOfStockOperations', 'MindboxEditCustomerOperations'] as $operationClass) {
+foreach (['MindboxCustomerOperations', 'MindboxOutOfStockOperations', 'MindboxEditCustomerOperations', 'MindboxRegisterCustomerOperations'] as $operationClass) {
     if (class_exists($operationClass, false) && method_exists($operationClass, 'registerHandlers')) {
         try {
             $operationClass::registerHandlers();

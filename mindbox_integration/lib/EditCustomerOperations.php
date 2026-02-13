@@ -98,7 +98,7 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                     true,
                     null,
                     null,
-                    true
+                    false//true
                 );
 
                 // Success or queued (null return) — allow save
@@ -159,7 +159,7 @@ if (!class_exists('MindboxEditCustomerOperations', false)) {
                     true,
                     null,
                     null,
-                    true
+                    false//true
                 );
 
                 return ['success' => true, 'errors' => []];

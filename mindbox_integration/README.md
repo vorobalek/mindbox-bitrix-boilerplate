@@ -103,6 +103,49 @@ Installation
      $errors = MindboxEditCustomerOperations::getLastValidationErrors();
      if ($errors && isset($errors['EMAIL'])) { echo $errors['EMAIL']; }
 
+9) Website.RegisterCustomer for user registration:
+   - File location:
+     /local/php_interface/mindbox_integration/lib/RegisterCustomerOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - If configuration is incomplete, handlers are not registered and nothing is sent.
+   - Handler listens `main:OnAfterUserRegister` and sends customer data to Mindbox
+     AFTER Bitrix registration completes. Registration is never blocked by Mindbox errors.
+   - Standard registration (via Bitrix event) always sends with Email+SMS subscriptions
+     and without discount card.
+   - Configure operation behavior in config.php:
+     - operations.registerCustomer.enabled
+     - operations.registerCustomer.operation
+     - operations.registerCustomer.mindbox_ids_key
+     - operations.registerCustomer.site_customer_id_field (default: ID)
+     - operations.registerCustomer.discount_card_ids_key (for discount card integration)
+     - operations.registerCustomer.brand (subscription brand, e.g. 'podpisnie')
+     - operations.registerCustomer.topic (subscription topic, e.g. 'izdaniya')
+   - Payload sent to Mindbox:
+     {
+       "customer": {
+         "firstName": "<NAME>",
+         "lastName": "<LAST_NAME>",
+         "email": "<EMAIL>",
+         "mobilePhone": "<PERSONAL_PHONE>",
+         "ids": { "<mindbox_ids_key>": "<site_customer_id>" },
+         "discountCard": { "ids": { "<discount_card_ids_key>": "<card_id>" } },
+         "subscriptions": [
+           { "brand": "<brand>", "pointOfContact": "Email", "topic": "<topic>" },
+           { "brand": "<brand>", "pointOfContact": "SMS", "topic": "<topic>" }
+         ]
+       }
+     }
+     discountCard is included only when discountCardId is provided AND
+     discount_card_ids_key is configured. Each subscription entry is included
+     only when the corresponding flag is true AND brand/topic are configured.
+   - Public API for programmatic use (e.g. from ApiDiscountCard):
+     $result = MindboxRegisterCustomerOperations::sendRegisterCustomer($userId, [
+         'subscribeEmail' => true,
+         'subscribeSms'   => false,
+         'discountCardId' => '3685306193228',
+     ]);
+     // returns ['success' => bool, 'errors' => ['FIELD' => 'message', ...]]
+
 Re-install after a failed install
 - It is safe to run /local/php_interface/mindbox_integration/admin_install.php again.
 - If some artifacts already exist, the installer will reuse them.

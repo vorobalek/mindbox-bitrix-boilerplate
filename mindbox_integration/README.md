@@ -146,6 +146,55 @@ Installation
      ]);
      // returns ['success' => bool, 'errors' => ['FIELD' => 'message', ...]]
 
+10) Website.GetByCard — get customer info by discount card:
+   - File location:
+     /local/php_interface/mindbox_integration/lib/GetByCardOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - No event handlers — called explicitly from code.
+   - Configure operation behavior in config.php:
+     - operations.getByCard.enabled
+     - operations.getByCard.operation
+     - operations.getByCard.discount_card_ids_key (e.g. 'number')
+   - Payload sent to Mindbox:
+     {
+       "customer": {
+         "discountCard": {
+           "ids": { "<discount_card_ids_key>": "<card_number>" }
+         }
+       }
+     }
+   - Public API:
+     $result = MindboxGetByCardOperations::getByCard('3685306193228');
+     // returns ['success' => bool, 'data' => <Mindbox response>, 'errors' => [...]]
+
+11) Website.GetCustomerBonusPointsHistory — bonus points history:
+   - File location:
+     /local/php_interface/mindbox_integration/lib/BonusPointsHistoryOperations.php
+   - Safe connection is automatic from bootstrap/include (with file/class checks).
+   - No event handlers — called explicitly from code.
+   - Configure operation behavior in config.php:
+     - operations.getCustomerBonusPointsHistory.enabled
+     - operations.getCustomerBonusPointsHistory.operation
+     - operations.getCustomerBonusPointsHistory.mindbox_ids_key (e.g. 'websiteID')
+   - Payload sent to Mindbox:
+     {
+       "page": {
+         "pageNumber": 1,
+         "itemsPerPage": 20,
+         "sinceDateTimeUtc": "<optional>",
+         "tillDateTimeUtc": "<optional>"
+       },
+       "customer": {
+         "ids": { "<mindbox_ids_key>": "<customer_id>" }
+       }
+     }
+   - Public API:
+     $result = MindboxBonusPointsHistoryOperations::getBonusPointsHistory('123', [
+         'pageNumber'   => 1,
+         'itemsPerPage' => 20,
+     ]);
+     // returns ['success' => bool, 'data' => <Mindbox response>, 'errors' => [...]]
+
 Re-install after a failed install
 - It is safe to run /local/php_interface/mindbox_integration/admin_install.php again.
 - If some artifacts already exist, the installer will reuse them.

@@ -42,6 +42,16 @@ return [
             'brand' => '',
             'topic' => '',
         ],
+        'getByCard' => [
+            'enabled' => false, // set true only after all fields below are configured
+            'operation' => '', // example: 'Website.GetByCard'
+            'discount_card_ids_key' => '', // example: 'number'
+        ],
+        'getCustomerBonusPointsHistory' => [
+            'enabled' => false, // set true only after all fields below are configured
+            'operation' => '', // example: 'Website.GetCustomerBonusPointsHistory'
+            'mindbox_ids_key' => '', // example: 'IDWebsite'
+        ],
     ],
     'queue' => [
         'hl_block_name' => 'MindboxQueue',

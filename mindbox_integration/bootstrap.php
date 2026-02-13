@@ -89,6 +89,8 @@ $optionalFiles = [
     __DIR__ . '/lib/OutOfStockOperations.php',
     __DIR__ . '/lib/EditCustomerOperations.php',
     __DIR__ . '/lib/RegisterCustomerOperations.php',
+    __DIR__ . '/lib/GetByCardOperations.php',
+    __DIR__ . '/lib/BonusPointsHistoryOperations.php',
 ];
 foreach ($optionalFiles as $optionalFile) {
     if (is_file($optionalFile)) {
@@ -146,6 +148,16 @@ if (!class_exists('MindboxIntegrationConfig', false)) {
                         'discount_card_ids_key' => '',
                         'brand' => '',
                         'topic' => '',
+                    ],
+                    'getByCard' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'discount_card_ids_key' => '',
+                    ],
+                    'getCustomerBonusPointsHistory' => [
+                        'enabled' => false,
+                        'operation' => '',
+                        'mindbox_ids_key' => '',
                     ],
                 ],
                 'queue' => [
